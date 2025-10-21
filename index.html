@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trợ lý dinh dưỡng Algo - Tư Vấn Dinh Dưỡng Cá Nhân Hóa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Fresh & Vibrant (Lime Green, Bright Orange, Sunny Yellow) -->
+    <!-- Application Structure Plan: Một ứng dụng trang đơn được chia thành hai phần chính: một biểu mẫu nhập liệu tương tác theo từng bước và một bảng điều khiển kết quả được tạo động. Người dùng hoàn thành biểu mẫu, sau đó phần kết quả sẽ hiện ra, bao gồm các chỉ số sức khỏe chính (BMI, TDEE), biểu đồ trực quan về phân bổ dinh dưỡng đa lượng, và kế hoạch chi tiết cho 3 bữa ăn hàng ngày. Cấu trúc này hướng dẫn người dùng qua một luồng công việc rõ ràng, từ nhập dữ liệu đến nhận kết quả hữu ích, giúp các lời khuyên dinh dưỡng phức tạp trở nên dễ hiểu. -->
+    <!-- Visualization & Content Choices: 
+    - Thông tin người dùng -> Mục tiêu: Thu thập dữ liệu -> Trình bày: Biểu mẫu HTML nhiều bước với Tailwind CSS -> Tương tác: Người dùng điền thông tin, chọn tùy chọn -> Lý do: Chia nhỏ việc thu thập dữ liệu thành các bước dễ quản lý, cải thiện trải nghiệm người dùng.
+    - Các chỉ số sức khỏe (BMI, TDEE) -> Mục tiêu: Thông báo cho người dùng về tình trạng của họ -> Trình bày: Các "thẻ thống kê" nổi bật với số liệu lớn và nhãn rõ ràng -> Tương tác: Không, chỉ để thông tin -> Lý do: Làm nổi bật ngay lập tức các tính toán quan trọng nhất.
+    - Dinh dưỡng đa lượng hàng ngày -> Mục tiêu: Hiển thị sự cân bằng dinh dưỡng -> Trực quan hóa: Biểu đồ Donut từ Chart.js/Canvas -> Tương tác: Di chuột để xem chú giải chi tiết về tỷ lệ phần trăm -> Lý do: Cung cấp một bản tóm tắt nhanh, trực quan về sự cân bằng của kế hoạch bữa ăn, dễ hiểu hơn so với số liệu thô. (NO SVG/Mermaid).
+    - Kế hoạch bữa ăn -> Mục tiêu: Cung cấp lời khuyên cụ thể -> Trình bày: Lưới ba cột (xếp chồng trên di động) với các thẻ cho mỗi bữa ăn, không có hình ảnh, chỉ có mô tả văn bản và bảng HTML cho thông tin dinh dưỡng -> Tương tác: Không, chỉ để thông tin -> Lý do: Sắp xếp kết quả chính một cách logic và tập trung vào thông tin. (NO SVG/Mermaid). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: #374151;
+            background-image: url('https://storage.googleapis.com/aai-web-template-content/Gemini/images/healthy-bep-viet/food_pattern_background_light.png');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        .form-section {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid #E5E7EB;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .btn-primary {
+            background-color: #84CC16; /* lime-500 */
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-primary:hover {
+            background-color: #65A30D; /* lime-600 */
+            transform: translateY(-2px);
+            box-shadow: 0 7px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            font-weight: 800;
+        }
+        .result-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #F3F4F6;
+        }
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .stat-card {
+             background-color: rgba(255, 255, 255, 0.8);
+             backdrop-filter: blur(5px);
+             padding: 1rem;
+             border-radius: 12px;
+             border: 1px solid rgba(255,255,255,0.2);
+             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="text-center py-10 md:py-16">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-lime-600">Trợ lý dinh dưỡng Algo</h1>
+        <p class="text-lg mt-4 text-gray-700 max-w-2xl mx-auto">Xây dựng kế hoạch dinh dưỡng cá nhân hóa, khoa học và đậm chất Việt</p>
+    </header>
+
+    <main class="container mx-auto px-4 pb-12">
+        <section id="form-section" class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-4">Bắt đầu hành trình sống khỏe!</h2>
+            <p class="text-center text-gray-600 mb-8">Chỉ 1 phút để nhận ngay thực đơn được "may đo" dành riêng cho bạn.</p>
+            <form id="nutrition-form">
+                <div class="space-y-10">
+                    <div>
+                        <h3 class="text-xl font-bold border-b-2 border-lime-200 pb-2 mb-6 flex items-center gap-3"><span class="bg-lime-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold">1</span> Thông tin cơ bản</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="age" class="block text-sm font-medium text-gray-700">Tuổi</label>
+                                <input type="number" id="age" name="age" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500" placeholder="VD: 30">
+                            </div>
+                            <div>
+                                <label for="gender" class="block text-sm font-medium text-gray-700">Giới tính</label>
+                                <select id="gender" name="gender" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500">
+                                    <option value="male">Nam</option>
+                                    <option value="female">Nữ</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="height" class="block text-sm font-medium text-gray-700">Chiều cao (cm)</label>
+                                <input type="number" id="height" name="height" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500" placeholder="VD: 170">
+                            </div>
+                            <div>
+                                <label for="weight" class="block text-sm font-medium text-gray-700">Cân nặng (kg)</label>
+                                <input type="number" id="weight" name="weight" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500" placeholder="VD: 65">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold border-b-2 border-lime-200 pb-2 mb-6 flex items-center gap-3"><span class="bg-lime-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold">2</span> Tình trạng sức khỏe</h3>
+                        <div class="space-y-2">
+                             <p class="text-sm text-gray-600 mb-3">Chọn các bệnh lý nền (nếu có). Algo sẽ dựa vào đây để tối ưu thực đơn cho bạn.</p>
+                             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <div><label class="inline-flex items-center"><input type="checkbox" name="condition" value="none" class="rounded border-gray-300 text-lime-600 shadow-sm focus:ring-lime-500"> <span class="ml-2">Không có</span></label></div>
+                                <div><label class="inline-flex items-center"><input type="checkbox" name="condition" value="diabetes" class="rounded border-gray-300 text-lime-600 shadow-sm focus:ring-lime-500"> <span class="ml-2">Tiểu đường Type 2</span></label></div>
+                                <div><label class="inline-flex items-center"><input type="checkbox" name="condition" value="hypertension" class="rounded border-gray-300 text-lime-600 shadow-sm focus:ring-lime-500"> <span class="ml-2">Cao huyết áp</span></label></div>
+                                <div><label class="inline-flex items-center"><input type="checkbox" name="condition" value="lipid" class="rounded border-gray-300 text-lime-600 shadow-sm focus:ring-lime-500"> <span class="ml-2">Rối loạn mỡ máu</span></label></div>
+                                <div><label class="inline-flex items-center"><input type="checkbox" name="condition" value="obesity" class="rounded border-gray-300 text-lime-600 shadow-sm focus:ring-lime-500"> <span class="ml-2">Béo phì</span></label></div>
+                                <div><label class="inline-flex items-center"><input type="checkbox" name="condition" value="gout" class="rounded border-gray-300 text-lime-600 shadow-sm focus:ring-lime-500"> <span class="ml-2">Bệnh Gout</span></label></div>
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                         <h3 class="text-xl font-bold border-b-2 border-lime-200 pb-2 mb-6 flex items-center gap-3"><span class="bg-lime-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold">3</span> Lối sống và mục tiêu</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="activity" class="block text-sm font-medium text-gray-700">Mức độ hoạt động</label>
+                                <select id="activity" name="activity" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500">
+                                    <option value="1.2">Ít vận động (làm việc văn phòng)</option>
+                                    <option value="1.375">Vận động nhẹ (tập 1-3 ngày/tuần)</option>
+                                    <option value="1.55">Vận động vừa (tập 3-5 ngày/tuần)</option>
+                                    <option value="1.725">Vận động nặng (tập 6-7 ngày/tuần)</option>
+                                    <option value="1.9">Vận động rất nặng (lao động nặng)</option>
+                                </select>
+                            </div>
+                             <div>
+                                <label for="goal" class="block text-sm font-medium text-gray-700">Mục tiêu của bạn</label>
+                                <select id="goal" name="goal" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500">
+                                    <option value="lose">Giảm cân</option>
+                                    <option value="maintain">Duy trì cân nặng</option>
+                                    <option value="gain">Tăng cân</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <button type="submit" class="btn-primary text-lg">Xem Kế Hoạch Dinh Dưỡng Của Tôi</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="results-section" class="hidden mt-16">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold">Kế Hoạch Dinh Dưỡng Dành Cho Bạn</h2>
+                    <p id="result-intro" class="mt-3 text-gray-600"></p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-center">
+                    <div class="stat-card">
+                        <h3 class="text-sm font-medium text-gray-500">Chỉ số BMI</h3>
+                        <p id="bmi-value" class="text-4xl font-extrabold text-orange-500"></p>
+                        <p id="bmi-category" class="text-sm font-semibold text-orange-600"></p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="text-sm font-medium text-gray-500">Năng lượng mục tiêu/ngày</h3>
+                        <p id="tdee-value" class="text-4xl font-extrabold text-lime-600"></p>
+                        <p id="tdee-goal" class="text-sm font-semibold text-lime-700"></p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="text-sm font-medium text-gray-500">Mục tiêu</h3>
+                        <p id="goal-display" class="text-4xl font-extrabold text-teal-500"></p>
+                        <p class="text-sm font-semibold text-teal-600">Dựa trên lựa chọn của bạn</p>
+                    </div>
+                </div>
+
+                 <div class="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg mb-12 border">
+                    <h3 class="text-2xl font-bold text-center mb-4">Phân Bổ Dinh Dưỡng Đa Lượng (Ước Tính)</h3>
+                    <div class="chart-container">
+                        <canvas id="macro-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div id="breakfast-card" class="result-card flex flex-col p-6">
+                        <h3 class="text-2xl font-bold text-center text-orange-500 mb-4">🍳 BỮA SÁNG KHỞI ĐỘNG</h3>
+                        <div class="flex-grow">
+                            <p class="font-semibold">Món chính: <span id="breakfast-main"></span></p>
+                            <p class="text-sm text-gray-600 mb-2" id="breakfast-main-desc"></p>
+                            <p class="font-semibold">Thức uống: <span id="breakfast-drink"></span></p>
+                            <p class="text-sm text-gray-600 mb-4" id="breakfast-drink-desc"></p>
+                            <table class="w-full text-sm mb-4">
+                                <caption class="font-semibold mb-2 text-left">Phân Tích Dinh Dưỡng</caption>
+                                <tbody>
+                                    <tr class="border-b"><td class="py-1">Năng lượng</td><td class="text-right font-medium" id="breakfast-kcal"></td></tr>
+                                    <tr class="border-b"><td class="py-1">Protein</td><td class="text-right font-medium" id="breakfast-protein"></td></tr>
+                                    <tr class="border-b"><td class="py-1">Chất béo</td><td
