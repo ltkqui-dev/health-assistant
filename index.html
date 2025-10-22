@@ -179,12 +179,24 @@
                     <p id="result-intro" class="mt-3 text-gray-600"></p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-center">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 text-center">
                     <div class="stat-card">
                         <h3 class="text-sm font-medium text-gray-500">Chỉ số BMI</h3>
                         <p id="bmi-value" class="text-4xl font-extrabold text-orange-500"></p>
                         <p id="bmi-category" class="text-sm font-semibold text-orange-600"></p>
                     </div>
+                    <div class="stat-card">
+                        <h3 class="text-sm font-medium text-gray-500">BMR (Năng lượng nghỉ)</h3>
+                        <p id="bmr-value" class="text-4xl font-extrabold text-blue-500"></p>
+                        <p class="text-sm font-semibold text-blue-600">Năng lượng cơ bản</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="text-sm font-medium text-gray-500">TDEE (Tổng năng lượng)</h3>
+                        <p id="tdee-raw-value" class="text-4xl font-extrabold text-green-500"></p>
+                        <p class="text-sm font-semibold text-green-600">Năng lượng tiêu thụ/ngày</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 text-center max-w-3xl mx-auto">
                     <div class="stat-card">
                         <h3 class="text-sm font-medium text-gray-500">Năng lượng mục tiêu/ngày</h3>
                         <p id="tdee-value" class="text-4xl font-extrabold text-lime-600"></p>
@@ -218,4 +230,326 @@
                                 <tbody>
                                     <tr class="border-b"><td class="py-1">Năng lượng</td><td class="text-right font-medium" id="breakfast-kcal"></td></tr>
                                     <tr class="border-b"><td class="py-1">Protein</td><td class="text-right font-medium" id="breakfast-protein"></td></tr>
-                                    <tr class="border-b"><td class="py-1">Chất béo</td><td
+                                    <tr class="border-b"><td class="py-1">Chất béo</td><td class="text-right font-medium" id="breakfast-fat"></td></tr>
+                                    <tr><td class="py-1">Carbohydrate</td><td class="text-right font-medium" id="breakfast-carbs"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="bg-yellow-100 border-l-4 border-yellow-400 p-3 rounded mt-auto">
+                            <p class="font-semibold">💡 Lời khuyên:</p>
+                            <p class="text-sm" id="breakfast-tip"></p>
+                        </div>
+                    </div>
+
+                    <div id="lunch-card" class="result-card flex flex-col p-6">
+                        <h3 class="text-2xl font-bold text-center text-teal-500 mb-4">🍚 BỮA TRƯA CÂN BẰNG</h3>
+                        <div class="flex-grow">
+                            <p class="font-semibold">Thực đơn: <span id="lunch-main"></span></p>
+                            <p class="text-sm text-gray-600 mb-4" id="lunch-main-desc"></p>
+                            <table class="w-full text-sm mb-4">
+                                <caption class="font-semibold mb-2 text-left">Phân Tích Dinh Dưỡng</caption>
+                                <tbody>
+                                    <tr class="border-b"><td class="py-1">Năng lượng</td><td class="text-right font-medium" id="lunch-kcal"></td></tr>
+                                    <tr class="border-b"><td class="py-1">Protein</td><td class="text-right font-medium" id="lunch-protein"></td></tr>
+                                    <tr class="border-b"><td class="py-1">Chất béo</td><td class="text-right font-medium" id="lunch-fat"></td></tr>
+                                    <tr><td class="py-1">Carbohydrate</td><td class="text-right font-medium" id="lunch-carbs"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="bg-teal-50 border-l-4 border-teal-400 p-3 rounded mt-auto">
+                            <p class="font-semibold">💡 Lời khuyên:</p>
+                            <p class="text-sm" id="lunch-tip"></p>
+                        </div>
+                    </div>
+
+                    <div id="dinner-card" class="result-card flex flex-col p-6">
+                        <h3 class="text-2xl font-bold text-center text-pink-500 mb-4">🥗 BỮA TỐI NHẸ NHÀNG</h3>
+                        <div class="flex-grow">
+                             <p class="font-semibold">Món chính: <span id="dinner-main"></span></p>
+                            <p class="text-sm text-gray-600 mb-2" id="dinner-main-desc"></p>
+                            <p class="font-semibold">Thức uống: <span id="dinner-drink"></span></p>
+                            <p class="text-sm text-gray-600 mb-4" id="dinner-drink-desc"></p>
+                            <table class="w-full text-sm mb-4">
+                                <caption class="font-semibold mb-2 text-left">Phân Tích Dinh Dưỡng</caption>
+                                <tbody>
+                                    <tr class="border-b"><td class="py-1">Năng lượng</td><td class="text-right font-medium" id="dinner-kcal"></td></tr>
+                                    <tr class="border-b"><td class="py-1">Protein</td><td class="text-right font-medium" id="dinner-protein"></td></tr>
+                                    <tr class="border-b"><td class="py-1">Chất béo</td><td class="text-right font-medium" id="dinner-fat"></td></tr>
+                                    <tr><td class="py-1">Carbohydrate</td><td class="text-right font-medium" id="dinner-carbs"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="bg-pink-50 border-l-4 border-pink-400 p-3 rounded mt-auto">
+                            <p class="font-semibold">💡 Lời khuyên:</p>
+                            <p class="text-sm" id="dinner-tip"></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-6 mt-8">
+        <p class="text-sm text-gray-600 bg-white/50 inline-block px-4 py-2 rounded-full">&copy; 2025 Trợ lý dinh dưỡng Algo. Mọi thông tin chỉ mang tính chất tham khảo.</p>
+    </footer>
+
+    <script>
+        document.getElementById('nutrition-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const age = parseInt(document.getElementById('age').value);
+            const gender = document.getElementById('gender').value;
+            const height = parseInt(document.getElementById('height').value);
+            const weight = parseInt(document.getElementById('weight').value);
+            const activityFactor = parseFloat(document.getElementById('activity').value);
+            const goal = document.getElementById('goal').value;
+
+            if (isNaN(age) || isNaN(height) || isNaN(weight) || age <= 0 || height <= 0 || weight <= 0) {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg shadow-xl text-center max-w-sm mx-4">
+                        <p class="text-lg font-semibold mb-4">Lỗi Dữ Liệu</p>
+                        <p class="mb-4">Vui lòng nhập đầy đủ và chính xác các thông tin.</p>
+                        <button onclick="this.parentElement.parentElement.remove()" class="btn-primary">Đã hiểu</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                return;
+            }
+
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+
+            let bmr;
+            if (gender === 'male') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+
+            const tdee = bmr * activityFactor;
+
+            let targetCalories;
+            let goalText = '';
+            let tdeeGoalText = '';
+
+            if (goal === 'lose') {
+                targetCalories = tdee - 400;
+                goalText = 'Giảm cân';
+                tdeeGoalText = 'Để giảm cân';
+            } else if (goal === 'gain') {
+                targetCalories = tdee + 400;
+                goalText = 'Tăng cân';
+                tdeeGoalText = 'Để tăng cân';
+            } else {
+                targetCalories = tdee;
+                goalText = 'Duy trì cân nặng';
+                tdeeGoalText = 'Để duy trì cân nặng';
+            }
+            
+            let bmiCategory = '';
+            if (bmi < 18.5) {
+                bmiCategory = 'Thiếu cân';
+            } else if (bmi >= 18.5 && bmi < 23) {
+                bmiCategory = 'Bình thường';
+            } else if (bmi >= 23 && bmi < 25) {
+                bmiCategory = 'Thừa cân';
+            } else {
+                bmiCategory = 'Béo phì';
+            }
+
+            document.getElementById('bmi-value').textContent = bmi.toFixed(1);
+            document.getElementById('bmi-category').textContent = bmiCategory;
+            document.getElementById('tdee-value').textContent = Math.round(targetCalories) + ' kcal';
+            document.getElementById('tdee-goal').textContent = tdeeGoalText;
+            document.getElementById('goal-display').textContent = goalText;
+
+            let resultIntro = `Chỉ số BMI của bạn là ${bmi.toFixed(1)} (${bmiCategory}). Kế hoạch dưới đây được thiết kế để cung cấp khoảng ${Math.round(targetCalories)} kcal mỗi ngày nhằm hỗ trợ mục tiêu ${goalText.toLowerCase()} của bạn.`;
+            document.getElementById('result-intro').textContent = resultIntro;
+            
+            document.getElementById('bmr-value').textContent = Math.round(bmr) + ' kcal';
+            document.getElementById('tdee-raw-value').textContent = Math.round(tdee) + ' kcal';
+
+            const mealPlan = getMealPlan(goal);
+            populateMealCards(mealPlan);
+
+            const totalProtein = mealPlan.breakfast.protein + mealPlan.lunch.protein + mealPlan.dinner.protein;
+            const totalFat = mealPlan.breakfast.fat + mealPlan.lunch.fat + mealPlan.dinner.fat;
+            const totalCarbs = mealPlan.breakfast.carbs + mealPlan.lunch.carbs + mealPlan.dinner.carbs;
+            
+            drawMacroChart(totalProtein, totalFat, totalCarbs);
+
+            document.getElementById('results-section').classList.remove('hidden');
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        function getMealPlan(goal) {
+            const plans = {
+                lose: {
+                    breakfast: {
+                        main: "Phở Gà Gạo Lứt (1 tô vừa)",
+                        main_desc: "Bánh phở gạo lứt cung cấp tinh bột phức, giúp no lâu. Thịt ức gà là nguồn protein nạc, ít béo.",
+                        drink: "Nước ấm với chanh",
+                        drink_desc: "Bắt đầu ngày mới bằng việc bù nước, hỗ trợ tiêu hóa và cung cấp vitamin C.",
+                        kcal: 510, protein: 35, fat: 12, carbs: 65,
+                        tip: "Hãy thêm nhiều giá đỗ và rau thơm. Hạn chế sử dụng tương đen, tương ớt công nghiệp để giảm lượng đường và muối.",
+                    },
+                    lunch: {
+                        main: "Cơm gạo lứt, Cá diêu hồng hấp gừng, Canh bí đỏ tôm",
+                        main_desc: "Bữa trưa cân bằng với protein từ cá, carb phức từ gạo lứt và vitamin từ rau củ.",
+                        kcal: 690, protein: 45, fat: 20, carbs: 80,
+                        tip: "Nên ăn rau trước để tạo cảm giác no và làm chậm quá trình hấp thụ đường từ cơm.",
+                    },
+                    dinner: {
+                        main: "Ức gà áp chảo & Khoai lang luộc",
+                        main_desc: "Ức gà cung cấp protein tinh khiết. Khoai lang là nguồn carb tốt với chỉ số GI thấp.",
+                        drink: "Salad rau xanh sốt chanh dây",
+                        drink_desc: "Bổ sung vitamin, khoáng chất và enzyme tươi sống từ rau củ.",
+                        kcal: 490, protein: 40, fat: 15, carbs: 50,
+                        tip: "Nên ăn tối trước giờ đi ngủ ít nhất 3 tiếng để hệ tiêu hóa hoạt động tốt nhất.",
+                    }
+                },
+                maintain: {
+                    breakfast: {
+                        main: "Bún bò Huế (1 tô vừa)",
+                        main_desc: "Cung cấp năng lượng dồi dào từ bún và protein từ thịt bò, chả.",
+                        drink: "Trà Atiso",
+                        drink_desc: "Hỗ trợ giải nhiệt và tốt cho gan.",
+                        kcal: 550, protein: 30, fat: 20, carbs: 60,
+                        tip: "Yêu cầu ít sa tế và vắt thêm chanh để cân bằng vị và tăng vitamin C.",
+                    },
+                    lunch: {
+                        main: "Cơm trắng, Thịt kho trứng, Canh chua cá lóc, Rau muống xào tỏi",
+                        main_desc: "Một bữa cơm truyền thống Việt Nam, đầy đủ các nhóm chất dinh dưỡng.",
+                        kcal: 750, protein: 40, fat: 25, carbs: 90,
+                        tip: "Hạn chế chan quá nhiều nước thịt kho để giảm lượng natri và chất béo bão hòa.",
+                    },
+                    dinner: {
+                        main: "Miến gà",
+                        main_desc: "Một lựa chọn nhẹ nhàng nhưng vẫn đủ chất cho bữa tối.",
+                        drink: "Nước ép táo",
+                        drink_desc: "Cung cấp vitamin và chất xơ tự nhiên.",
+                        kcal: 500, protein: 35, fat: 15, carbs: 55,
+                        tip: "Thêm nhiều giá và rau răm để tăng hương vị và dinh dưỡng.",
+                    }
+                },
+                gain: {
+                    breakfast: {
+                        main: "Xôi mặn thập cẩm",
+                        main_desc: "Nguồn năng lượng cao từ gạo nếp, kết hợp protein từ chả, lạp xưởng, trứng cút.",
+                        drink: "Sữa đậu nành",
+                        drink_desc: "Bổ sung protein thực vật và các axit amin cần thiết.",
+                        kcal: 650, protein: 35, fat: 25, carbs: 70,
+                        tip: "Thêm một quả trứng ốp la để tăng cường protein và chất béo lành mạnh.",
+                    },
+                    lunch: {
+                        main: "Cơm sườn bì chả, Canh khổ qua dồn thịt",
+                        main_desc: "Bữa trưa giàu năng lượng và protein từ sườn nướng, chả trứng và thịt dồn.",
+                        kcal: 850, protein: 50, fat: 30, carbs: 95,
+                        tip: "Nên ăn thêm dưa leo, cà chua để cân bằng và bổ sung vitamin.",
+                    },
+                    dinner: {
+                        main: "Bò bít tết và khoai tây nghiền",
+                        main_desc: "Thịt bò cung cấp lượng lớn protein và sắt, giúp xây dựng cơ bắp hiệu quả.",
+                        drink: "Sinh tố bơ",
+                        drink_desc: "Cung cấp chất béo tốt, vitamin và khoáng chất.",
+                        kcal: 700, protein: 45, fat: 35, carbs: 50,
+                        tip: "Thêm một phần bông cải xanh luộc để đảm bảo lượng chất xơ cần thiết.",
+                    }
+                }
+            };
+            
+            return plans[goal] || plans.maintain;
+        }
+        
+        function populateMealCards(plan) {
+            document.getElementById('breakfast-main').textContent = plan.breakfast.main;
+            document.getElementById('breakfast-main-desc').textContent = plan.breakfast.main_desc;
+            document.getElementById('breakfast-drink').textContent = plan.breakfast.drink;
+            document.getElementById('breakfast-drink-desc').textContent = plan.breakfast.drink_desc;
+            document.getElementById('breakfast-kcal').textContent = plan.breakfast.kcal + ' kcal';
+            document.getElementById('breakfast-protein').textContent = plan.breakfast.protein + ' g';
+            document.getElementById('breakfast-fat').textContent = plan.breakfast.fat + ' g';
+            document.getElementById('breakfast-carbs').textContent = plan.breakfast.carbs + ' g';
+            document.getElementById('breakfast-tip').textContent = plan.breakfast.tip;
+
+            document.getElementById('lunch-main').textContent = plan.lunch.main;
+            document.getElementById('lunch-main-desc').textContent = plan.lunch.main_desc;
+            document.getElementById('lunch-kcal').textContent = plan.lunch.kcal + ' kcal';
+            document.getElementById('lunch-protein').textContent = plan.lunch.protein + ' g';
+            document.getElementById('lunch-fat').textContent = plan.lunch.fat + ' g';
+            document.getElementById('lunch-carbs').textContent = plan.lunch.carbs + ' g';
+            document.getElementById('lunch-tip').textContent = plan.lunch.tip;
+            
+            document.getElementById('dinner-main').textContent = plan.dinner.main;
+            document.getElementById('dinner-main-desc').textContent = plan.dinner.main_desc;
+            document.getElementById('dinner-drink').textContent = plan.dinner.drink;
+            document.getElementById('dinner-drink-desc').textContent = plan.dinner.drink_desc;
+            document.getElementById('dinner-kcal').textContent = plan.dinner.kcal + ' kcal';
+            document.getElementById('dinner-protein').textContent = plan.dinner.protein + ' g';
+            document.getElementById('dinner-fat').textContent = plan.dinner.fat + ' g';
+            document.getElementById('dinner-carbs').textContent = plan.dinner.carbs + ' g';
+            document.getElementById('dinner-tip').textContent = plan.dinner.tip;
+        }
+
+        let macroChart = null;
+        function drawMacroChart(protein, fat, carbs) {
+            const ctx = document.getElementById('macro-chart').getContext('2d');
+            const totalCalories = protein * 4 + fat * 9 + carbs * 4;
+            if (macroChart) {
+                macroChart.destroy();
+            }
+            macroChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Protein', 'Chất béo', 'Carbohydrate'],
+                    datasets: [{
+                        data: [
+                            (protein * 4 * 100 / totalCalories).toFixed(1), 
+                            (fat * 9 * 100 / totalCalories).toFixed(1), 
+                            (carbs * 4 * 100 / totalCalories).toFixed(1)
+                        ],
+                        backgroundColor: ['#22D3EE', '#F97316', '#84CC16'],
+                        borderColor: '#FFFFFF',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 14 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    if (Array.isArray(label)) {
+                                      return label.join(' ');
+                                    } else {
+                                      return label;
+                                    }
+                                },
+                                label: function(context) {
+                                    return ' ' + context.formattedValue + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
+
+
